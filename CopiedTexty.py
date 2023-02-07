@@ -8,8 +8,17 @@ def GuiFunc():
 
 	tab2_layout = [[sg.Text('My Second tab.'), sg.Text('poop')]]
 
-	layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, tooltip='tip'), sg.Tab('tab 2', tab2_layout, tooltip='tip2')]])]]
-	
+	layout_tabgroup = [[
+		sg.Tab('CopiedTexty', tab1_layout, tooltip='tip'),
+		sg.Tab('Hotkeys', tab2_layout, tooltip='tip2'),
+	]]
+	layout = [[
+		sg.TabGroup(
+			layout_tabgroup,
+
+			)
+	]]
+	sg.theme('DarkAmber')
 	window = sg.Window('Window Title', layout)    
 
 	while True:
