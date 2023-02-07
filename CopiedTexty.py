@@ -5,6 +5,8 @@ import mouse
 from threading import Thread
   
 savedTexts = []
+modifiers = ['ctrl', 'shift', 'alt']
+keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 class Gui:
 	def __init__(self):
@@ -55,17 +57,28 @@ class Gui:
 
 	def newWin(self):
 		self.newWin_layout = [[
-			sg.Text('Input your new Texty here'),
+			sg.Multiline('Input your new Texty here', s=(37,10)),
+		],[
+			sg.Text('Hotkey Combo'),
+			sg.Combo(modifiers, s=(5,0)),
+			sg.Combo(modifiers, s=(5,0)),
+			sg.Combo(keys, s=(5,0))
+		],[
+			sg.Button(button_text = "Save", key='__Save__')
 		]]
 
 	def mainLoop(self):
 		while True:
-			event, values = self.mainWin.read() 
-			if event == sg.WIN_CLOSED:
+			mainWin_event, mainWin_values = self.mainWin.read() 
+			newWin_event, newWin_values = self.newWin.read() 
+			if mainWin_event == sg.WIN_CLOSED:
 				break
-			if event == '__New__':
+			if mainWin_event == '__New__':
 				self.newWin.UnHide()
 
+			if newWin_event == '__Save__':
+				#self.newWin.close()
+				continue
 
 def main():
 	myWin = Gui()
