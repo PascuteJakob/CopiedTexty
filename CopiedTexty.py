@@ -63,7 +63,7 @@ class Gui:
 
 	def newWin(self):
 		self.newWin_layout = [[
-			sg.Multiline('Input your new Texty here', s=(37,10), key=('__multiLine')),
+			sg.Multiline('Input your new Texty here', s=(37,10), key=('__multiLine__')),
 		],[
 			sg.Text('Hotkey Combo'),
 			sg.Combo(modifiers, s=(5,0), key=('__mod1__')),
@@ -76,15 +76,14 @@ class Gui:
 	def mainLoop(self):
 		while True:
 			mainWin_event, mainWin_values = self.mainWin.read() 
-			newWin_event, newWin_values = self.newWin.read() 
 			if mainWin_event == sg.WIN_CLOSED:
 				break
 			if mainWin_event == '__New__':
 				self.newWin.UnHide()
-
+				newWin_event, newWin_values = self.newWin.read() 
 			if newWin_event == '__Save__':
 				#self.newWin.close()
-				f = open('CopiedTextyData.csv', 'r')
+				f = open('CopiedTextyData.csv', 'a')
 				f.write(newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
 				#newWin.close()
 
