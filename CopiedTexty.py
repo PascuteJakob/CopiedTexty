@@ -65,9 +65,6 @@ class Gui:
 		],[
 			sg.Button(button_text = "Save", key='__Save__')
 		]]
-<<<<<<< Updated upstream
-
-=======
 	def editWin(self, values):
 		lines = []
 		f = open('CopiedTextyData.csv', 'r')
@@ -78,6 +75,8 @@ class Gui:
 		lineCounter = 0
 		for i in lines:
 			listValue = values['__textEntry__'][0]
+			#print(listValue)
+			print(i[0], listValue)
 			if i[0] == listValue:
 				modOne = i[1]
 				modTwo = i[2]
@@ -90,7 +89,6 @@ class Gui:
 		self.newWin = sg.Window('Add Entry', self.newWin_layout,
 			location=(self.mainWinLocation[0]+228,self.mainWinLocation[1]), finalize=True,)
 		print('created window')
->>>>>>> Stashed changes
 	def mainLoop(self):
 		while True:
 			mainWin_event, mainWin_values = self.mainWin.read() 
@@ -108,6 +106,8 @@ class Gui:
 					savedTexts.append(newWin_values['__multiLine__'] + "\n")
 					self.mainWin['__textEntry__'].update(savedTexts)
 					self.newWin.close()
+			if mainWin_event == '__Edit__':
+				self.editWin(mainWin_values)
 
 def main():
 	myWin = Gui()
