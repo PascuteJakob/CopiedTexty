@@ -18,13 +18,6 @@ class Gui:
 		self.newWin()
 		self.mainWin = sg.Window('Copied Texty', self.mainWin_layout,
  			finalize = True) 
-		self.mainWinLocation = self.mainWin.CurrentLocation()
-		print(self.mainWinLocation)
-		self.newWin = sg.Window('Add Entry', self.newWin_layout,
-			location=(self.mainWinLocation[0]+228,self.mainWinLocation[1]), finalize=True,)
-		print('created window')
-		self.newWin.Hide()
-		print('hid window')
 	def mainWin(self):
 		tab1_layout = [[
 			sg.Text('Texty'),
@@ -72,14 +65,39 @@ class Gui:
 		],[
 			sg.Button(button_text = "Save", key='__Save__')
 		]]
+<<<<<<< Updated upstream
 
+=======
+	def editWin(self, values):
+		lines = []
+		f = open('CopiedTextyData.csv', 'r')
+		for x in f:
+			lines.append(x.split(','))
+		f.close()
+		print('starting other loop')
+		lineCounter = 0
+		for i in lines:
+			listValue = values['__textEntry__'][0]
+			if i[0] == listValue:
+				modOne = i[1]
+				modTwo = i[2]
+				hotkey = i[3]
+				print(lineCounter)
+			lineCounter += 1
+	def createNewWindow(self):
+		self.mainWinLocation = self.mainWin.CurrentLocation()
+		print(self.mainWinLocation)
+		self.newWin = sg.Window('Add Entry', self.newWin_layout,
+			location=(self.mainWinLocation[0]+228,self.mainWinLocation[1]), finalize=True,)
+		print('created window')
+>>>>>>> Stashed changes
 	def mainLoop(self):
 		while True:
 			mainWin_event, mainWin_values = self.mainWin.read() 
 			if mainWin_event == sg.WIN_CLOSED:
 				break
 			if mainWin_event == '__New__':
-				self.newWin.UnHide()
+				self.createNewWindow()
 				newWin_event, newWin_values = self.newWin.read() 
 				if newWin_event == '__Save__':
 					print('saving')
