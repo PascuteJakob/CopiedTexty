@@ -22,7 +22,9 @@ class Gui:
 		print(self.mainWinLocation)
 		self.newWin = sg.Window('Add Entry', self.newWin_layout,
 			location=(self.mainWinLocation[0]+228,self.mainWinLocation[1]), finalize=True,)
+		print('created window')
 		self.newWin.Hide()
+		print('hid window')
 	def mainWin(self):
 		tab1_layout = [[
 			sg.Text('Texty'),
@@ -61,12 +63,12 @@ class Gui:
 
 	def newWin(self):
 		self.newWin_layout = [[
-			sg.Multiline('Input your new Texty here', s=(37,10)),
+			sg.Multiline('Input your new Texty here', s=(37,10), key=('__multiLine')),
 		],[
 			sg.Text('Hotkey Combo'),
-			sg.Combo(modifiers, s=(5,0)),
-			sg.Combo(modifiers, s=(5,0)),
-			sg.Combo(keys, s=(5,0))
+			sg.Combo(modifiers, s=(5,0), key=('__mod1__')),
+			sg.Combo(modifiers, s=(5,0), key=('__mod2__')),
+			sg.Combo(keys, s=(5,0), key=('__hotKey__')),
 		],[
 			sg.Button(button_text = "Save", key='__Save__')
 		]]
@@ -82,7 +84,9 @@ class Gui:
 
 			if newWin_event == '__Save__':
 				#self.newWin.close()
-				continue
+				f = open('CopiedTextyData.csv', 'r')
+				f.write(newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
+				#newWin.close()
 
 def main():
 	myWin = Gui()
