@@ -83,9 +83,12 @@ class Gui:
 				newWin_event, newWin_values = self.newWin.read() 
 				if newWin_event == '__Save__':
 					print('saving')
-					f = open('CopiedTextyData.csv', 'a')
+					f = open('CopiedTextyData.csv', 'a+')
 					f.write(newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
+					newText = f.read()
 					f.close()
+					savedTexts.append(newWin_values['__multiLine__'] + "\n")
+					self.mainWin['__textEntry__'].update(savedTexts)
 					self.newWin.close()
 
 def main():
