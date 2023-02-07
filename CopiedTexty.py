@@ -4,6 +4,7 @@ import mouse
 from threading import Thread
     
 def GuiFunc():
+	sg.theme('DarkAmber')
 	tab1_layout = [[sg.Text('My first tab.'), sg.Text('poop')]]    
 
 	tab2_layout = [[sg.Text('My Second tab.'), sg.Text('poop')]]
@@ -18,7 +19,6 @@ def GuiFunc():
 
 			)
 	]]
-	sg.theme('DarkAmber')
 	window = sg.Window('Window Title', layout)    
 
 	while True:
