@@ -7,7 +7,7 @@ from threading import Thread
 savedTexts = []
 f = open('CopiedTextyData.csv', 'r')
 for lines in f:
-	savedTexts.append(lines)
+	savedTexts.append(lines.split(',')[0])
 print(savedTexts)
 modifiers = ['ctrl', 'shift', 'alt']
 keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -81,11 +81,12 @@ class Gui:
 			if mainWin_event == '__New__':
 				self.newWin.UnHide()
 				newWin_event, newWin_values = self.newWin.read() 
-			if newWin_event == '__Save__':
-				#self.newWin.close()
-				f = open('CopiedTextyData.csv', 'a')
-				f.write(newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
-				#newWin.close()
+				if newWin_event == '__Save__':
+					print('saving')
+					f = open('CopiedTextyData.csv', 'a')
+					f.write(newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
+					f.close()
+					self.newWin.close()
 
 def main():
 	myWin = Gui()
