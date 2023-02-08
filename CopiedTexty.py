@@ -6,29 +6,42 @@ from threading import Thread
 
 savedTextsList = []
 savedTextsDict = {}
-f = open('CopiedTextyData.csv', 'r')
-for lines in f:
-	if ',' in lines:
-		savedTextIndex = lines.split(',')[0]
-		savedTextData = lines.split(',')[1]
-		print(savedTextIndex, savedTextData)
-		savedTextsDict[savedTextIndex] = savedTextData
 
 modifiers = ['ctrl', 'shift', 'alt']
 keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 class Gui:
 	def __init__(self):
+		self.loadOrSaveData()
 		self.mainWin()
 		self.newWin()
 		self.mainWin = sg.Window('Copied Texty', self.mainWin_layout,
- 			finalize = True) 
+ 			finalize = True)
+	def loadOrSaveData(self, newEntry = []):
+		if newEntry:
+			print('saving')
+			f = open('CopiedTextyData.csv', 'a+')
+			lenOfFile = len(f.readlines())
+			f.write(newEntry)
+			newText = f.read()
+			f.close()
+			newEntry = newEntry.split()[0].split(',')
+			savedTextsDict[newEntry[0]] = newEntry[1]
+			self.mainWin['__textEntry__'].update(savedTextsDict.values())
+			self.newWin.close()
+		f = open('CopiedTextyData.csv', 'r')
+		for lines in f:
+			if ',' in lines:
+				savedTextIndex = lines.split(',')[0]
+				savedTextData = lines.split(',')[1]
+				print(savedTextIndex, savedTextData)
+				savedTextsDict[savedTextIndex] = savedTextData 
 	def mainWin(self):
 		tab1_layout = [[
 			sg.Text('Texty'),
 			sg.Text('Hotkey', p=((80,0),(0,0))),
 		],[
-			sg.Listbox(savedTextsDict,
+			sg.Listbox(savedTextsDict.values(),
 			default_values = None,
 			size=(24,10),
 			key='__textEntry__'),
@@ -103,15 +116,7 @@ class Gui:
 				self.createNewWindow()
 				newWin_event, newWin_values = self.newWin.read() 
 				if newWin_event == '__Save__':
-					print('saving')
-					f = open('CopiedTextyData.csv', 'a+')
-					lenOfFile = len(f.readlines())
-					f.write(lenOfFile + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
-					newText = f.read()
-					f.close()
-					savedTexts.append(newWin_values['__multiLine__'] + "\n")
-					self.mainWin['__textEntry__'].update(savedTexts)
-					self.newWin.close()
+					self.loadOrSaveData(str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
 			if mainWin_event == '__Edit__':
 				self.editWin(mainWin_values)
 
