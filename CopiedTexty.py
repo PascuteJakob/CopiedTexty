@@ -8,12 +8,12 @@ savedTextsList = []
 savedTextsDict = {}
 f = open('CopiedTextyData.csv', 'r')
 for lines in f:
-	savedTextIndex = lines.split(',')[0]
-	### ERROR HERE VVVV "list index out of range"
-	savedTextData = lines.split(',')[1]
-	print(savedTextIndex, savedTextData)
-	savedTextsDict[savedTextIndex] = savedTextData
-print(savedTextsDict)
+	if ',' in lines:
+		savedTextIndex = lines.split(',')[0]
+		savedTextData = lines.split(',')[1]
+		print(savedTextIndex, savedTextData)
+		savedTextsDict[savedTextIndex] = savedTextData
+
 modifiers = ['ctrl', 'shift', 'alt']
 keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
@@ -28,7 +28,7 @@ class Gui:
 			sg.Text('Texty'),
 			sg.Text('Hotkey', p=((80,0),(0,0))),
 		],[
-			sg.Listbox(savedTextsList,
+			sg.Listbox(savedTextsDict,
 			default_values = None,
 			size=(24,10),
 			key='__textEntry__'),
