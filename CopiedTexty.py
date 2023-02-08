@@ -25,7 +25,7 @@ class Gui:
 			f.write(newEntry)
 			newText = f.read()
 			f.close()
-			newEntry = newEntry.split()[0].split(',')
+			newEntry = newEntry.split(',')
 			savedTextsDict[newEntry[0]] = newEntry[1]
 			self.mainWin['__textEntry__'].update(savedTextsDict.values())
 			newWin.close()
@@ -84,24 +84,15 @@ class Gui:
 			sg.Button(button_text = "Save", key='__Save__')
 		]]
 		return newWin_layout
+
 	def editWin(self, values):
 		lines = []
 		f = open('CopiedTextyData.csv', 'r')
 		for x in f:
-			lines.append(x.split(','))
+			lines.append(x)
 		f.close()
-		print('starting other loop')
-		lineCounter = 0
-		for i in lines:
-			listValue = values['__textEntry__'][0]
-			#print(listValue)
-			print(i[0], listValue)
-			if i[0] == listValue:
-				modOne = i[1]
-				modTwo = i[2]
-				hotkey = i[3]
-				print(lineCounter)
-			lineCounter += 1
+		print(lines)
+
 	def createNewWindow(self):
 		mainWinLocation = self.mainWin.CurrentLocation()
 		print(mainWinLocation)
@@ -118,7 +109,7 @@ class Gui:
 				newWin = self.createNewWindow()
 				newWin_event, newWin_values = newWin.read() 
 				if newWin_event == '__Save__':
-					self.loadOrSaveData(newWin, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
+					self.loadOrSaveData(newWin, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'])
 			if mainWin_event == '__Edit__':
 				self.editWin(mainWin_values)
 
