@@ -49,7 +49,7 @@ class Gui:
 			sg.Text('Texty'),
 			sg.Text('Hotkey', p=((80,0),(0,0))),
 		],[
-			sg.Listbox(savedTextsDict.values(),
+			sg.Listbox(list(savedTextsDict.values()),
 			default_values = None,
 			size=(24,10),
 			key='__listBox__',
@@ -100,8 +100,7 @@ class Gui:
 		for x in f:
 			lines.append(x)
 		f.close()
-		test = values['__listBox__']
-		print(test)
+		selectedValue = values['__listBox__']
 
 	def createNewWindow(self):
 		mainWinLocation = self.mainWin.CurrentLocation()
@@ -122,8 +121,6 @@ class Gui:
 					self.loadOrSaveData(newWin, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'])
 			if mainWin_event == '__Edit__':
 				self.editWin(mainWin_values)
-			if mainWin_event == '__listBox__':
-				print(mainWin_values)
 			if mainWin_event == '__theme__':
 				newTheme = mainWin_values['__theme__'][0]
 				sg.theme(newTheme)
