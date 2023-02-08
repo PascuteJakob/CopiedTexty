@@ -1,9 +1,18 @@
 import PySimpleGUI as sg
-sg.theme('DarkAmber')
 import keyboard
 import mouse
 from threading import Thread
 
+defaultTheme = 'DarkAmber'
+f = open('SelectedTheme.csv', 'r')
+SelectedTheme = f.read()
+f.close()
+if SelectedTheme == "":
+	sg.theme(defaultTheme)
+else:
+	sg.theme(SelectedTheme)
+
+theme_name_list = sg.theme_list()
 savedTextsList = []
 savedTextsDict = {}
 
@@ -15,8 +24,7 @@ class Gui:
 		self.loadOrSaveData()
 		self.mainWin()
 		self.newWin()
-		self.mainWin = sg.Window('Copied Texty', self.mainWin_layout,
- 			finalize = True)
+		self.mainWin = sg.Window('Copied Texty', self.mainWin_layout,)
 	def loadOrSaveData(self, newWin = None, newEntry = []):
 		if newEntry:
 			print('saving')
@@ -52,8 +60,8 @@ class Gui:
 			sg.Button('Delete', s=(6,1), key='__Delete__')
 		]]
 		tab2_layout = [[
-			sg.Text('My Second tab.'),
-			sg.Text('poop'),
+			sg.Text('Theme Selector', p=((0,0),(0,190))),
+			sg.Listbox(theme_name_list, s=(10,12), key="__theme__", enable_events=True)
 		]]
 		tab3_layout = [[
 			sg.Text('My Second tab.'),
@@ -69,7 +77,7 @@ class Gui:
 		self.mainWin_layout = [[
 			sg.TabGroup(
 				layout_tabgroup,
-				)
+				),
 		]]
 
 	def newWin(self):
@@ -112,6 +120,16 @@ class Gui:
 					self.loadOrSaveData(newWin, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'])
 			if mainWin_event == '__Edit__':
 				self.editWin(mainWin_values)
+			if mainWin_event == '__theme__':
+				newTheme = mainWin_values['__theme__'][0]
+				sg.theme(newTheme)
+				f = open('SelectedTheme.csv', 'w')
+				f.write(newTheme)
+				f.close()
+				self.mainWin.close()
+				main()
+
+
 
 def main():
 	myWin = Gui()
