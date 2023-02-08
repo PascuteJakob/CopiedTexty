@@ -4,11 +4,16 @@ import keyboard
 import mouse
 from threading import Thread
 
-savedTexts = []
+savedTextsList = []
+savedTextsDict = {}
 f = open('CopiedTextyData.csv', 'r')
 for lines in f:
-	savedTexts.append(lines.split(',')[0])
-print(savedTexts)
+	savedTextIndex = lines.split(',')[0]
+	### ERROR HERE VVVV "list index out of range"
+	savedTextData = lines.split(',')[1]
+	print(savedTextIndex, savedTextData)
+	savedTextsDict[savedTextIndex] = savedTextData
+print(savedTextsDict)
 modifiers = ['ctrl', 'shift', 'alt']
 keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
@@ -23,7 +28,7 @@ class Gui:
 			sg.Text('Texty'),
 			sg.Text('Hotkey', p=((80,0),(0,0))),
 		],[
-			sg.Listbox(savedTexts,
+			sg.Listbox(savedTextsList,
 			default_values = None,
 			size=(24,10),
 			key='__textEntry__'),
@@ -100,7 +105,8 @@ class Gui:
 				if newWin_event == '__Save__':
 					print('saving')
 					f = open('CopiedTextyData.csv', 'a+')
-					f.write(newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
+					lenOfFile = len(f.readlines())
+					f.write(lenOfFile + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "\n")
 					newText = f.read()
 					f.close()
 					savedTexts.append(newWin_values['__multiLine__'] + "\n")
