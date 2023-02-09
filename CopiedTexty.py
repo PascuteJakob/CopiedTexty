@@ -25,19 +25,27 @@ class Gui:
 		self.mainWin()
 		self.newWin()
 		self.mainWin = sg.Window('Copied Texty', self.mainWin_layout,)
-	def loadOrSaveData(self, newWin = None, newEntry = []):
+	def loadOrSaveData(self, newWin = None, newEntry = [], editWindow = None, editedEntry = []):
 		if newEntry:
 			print('saving')
 			f = open('CopiedTextyData.csv', 'a+')
 			lenOfFile = len(f.readlines())
-			f.write(newEntry)
+			f.write(newEntry + '\n')
 			newText = f.read()
 			f.close()
 			newEntry = newEntry.split(',')
 			savedTextsDict[newEntry[0]] = newEntry[1]
-			self.mainWin['__textEntry__'].update(savedTextsDict.values())
+			self.mainWin['__listBox__'].update(savedTextsDict.values())
 			newWin.close()
 		f = open('CopiedTextyData.csv', 'r')
+		
+		if editWindow:
+			print('saving')
+			f = open('CopiedTextyData.csv', 'a+')
+			lenOfFile = len(f.readlines())
+			lines = f.readlines()
+
+
 		for lines in f:
 			if ',' in lines:
 				savedTextIndex = lines.split(',')[0]
@@ -81,7 +89,7 @@ class Gui:
 				),
 		]]
 
-	def newWin(self):
+	def newWin(self, values = []):
 		newWin_layout = [[
 			sg.Multiline('Input your new Texty here', s=(37,10), key=('__multiLine__')),
 		],[
@@ -94,13 +102,14 @@ class Gui:
 		]]
 		return newWin_layout
 
-	def editWin(self, values):
+	def edit(self, values):
 		lines = []
 		f = open('CopiedTextyData.csv', 'r')
 		for x in f:
 			lines.append(x)
 		f.close()
 		selectedValue = values['__listBox__']
+		print(self.mainWin['__listBox__'].get_indexes()[0])
 
 	def createNewWindow(self):
 		mainWinLocation = self.mainWin.CurrentLocation()
@@ -120,7 +129,11 @@ class Gui:
 				if newWin_event == '__Save__':
 					self.loadOrSaveData(newWin, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'])
 			if mainWin_event == '__Edit__':
-				self.editWin(mainWin_values)
+				self.edit(mainWin_values)
+				editWindow = self.createNewWindow()
+				editWindow_event, editWindow_values = editWindow.read()
+				if editWindow_event == '__Save__':
+					self.loadOrSaveData(newWin, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," + newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'])
 			if mainWin_event == '__theme__':
 				newTheme = mainWin_values['__theme__'][0]
 				sg.theme(newTheme)
