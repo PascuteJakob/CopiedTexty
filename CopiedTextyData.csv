@@ -1,3 +1,3 @@
-0,Text, hotkeyModifier,hotkeyModifier2,hotkey
-2,placeholder,,,
-3,placeholder 2,,,
+0,Text,hotkeyModifier,hotkeyModifier2,hotkey
+1,Input your new Texty here,ctrl,shift,j
+2,test texty,ctrl,shift,2
