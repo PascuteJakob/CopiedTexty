@@ -47,10 +47,10 @@ class Gui:
 			f = open('CopiedTextyData.csv', 'r')
 			data = f.readlines()
 			data[int(entry[0])] = entry
-			print(''.join(data))
 			f.close()
 			f = open('CopiedTextyData.csv', 'w')
-			f.write(' '.join(data))
+			for i in data:
+				f.write(i)
 			f.close()
 			entry = entry.split(',')
 			savedTextsDict[entry[0]] = entry[1]
@@ -146,6 +146,7 @@ class Gui:
 				newWin = self.createNewWindow()
 				newWin_event, newWin_values = newWin.read() 
 				if newWin_event == '__Save__':
+					print(str(len(savedTextsDict)))
 					self.loadOrSaveData(newWin, None, str(len(savedTextsDict)) + "," + newWin_values['__multiLine__'] + "," 
 						+ newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'])
 			if mainWin_event == '__Edit__':
@@ -168,6 +169,37 @@ class Gui:
 				if editWindow_event == '__Save__':
 					self.loadOrSaveData(None, editWindow, str(index) + "," + editWindow_values['__multiLine__'] + "," 
 						+ editWindow_values['__mod1__'] + "," + editWindow_values['__mod2__'] + "," + editWindow_values['__hotKey__'])
+			if mainWin_event == '__Delete__':
+				index = self.mainWin['__listBox__'].get_indexes()[0]
+				savedTextsDict[str(index)] = ""
+				counter = 0
+				newDict = {}
+				for i in range(len(savedTextsDict)):
+					if savedTextsDict[str(i)] == "":
+						continue
+					else:
+						newDict[counter] = savedTextsDict[str(i)]
+						counter+=1
+				self.mainWin['__listBox__'].update(newDict.values())
+				f = open('CopiedTextyData.csv', 'r')
+				lines = f.readlines()
+				f.close()
+				f = open('CopiedTextyData.csv', 'w')
+				counter = 0
+				for i in lines:
+					print(i[0], index)
+					if i[0] == str(index):
+						continue
+						print('EQUAL TO INDEX')
+					else:
+						iSplit = i.split(',')
+						f.write(str(counter) + i[1:])
+						savedTextsDict.popitem()
+						print('------------------')
+						print(len(savedTextsDict))
+						print('------------------')
+					counter += 1
+				f.close()
 			if mainWin_event == '__theme__':
 				newTheme = mainWin_values['__theme__'][0]
 				sg.theme(newTheme)
