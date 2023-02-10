@@ -167,10 +167,11 @@ class Gui:
 
 				linesSplit = file.readlines()[index].split(',')
 				file.close()
-				linesSplit = data[1]
-				linesSplit = data[2]
-				linesSplit = data[3]
-				linesSplit = data[4]
+				texty = linesSplit[1]
+				modOne = linesSplit[2]
+				modTwo = linesSplit[3]
+				hotkey = linesSplit[4]
+				name = linesSplit[5]
 				print(texty, modOne, modTwo, hotkey)
 				editWindow = self.createNewWindow()
 				editWindow['__multiLine__'].update(value=texty)
