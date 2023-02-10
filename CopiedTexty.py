@@ -4,9 +4,9 @@ import mouse
 import fileinput
 
 defaultTheme = 'DarkAmber'
-f = open('SelectedTheme.csv', 'r')
-SelectedTheme = f.read()
-f.close()
+file = open('SelectedTheme.csv', 'r')
+SelectedTheme = file.read()
+file.close()
 if SelectedTheme == "":
 	sg.theme(defaultTheme)
 else:
@@ -84,10 +84,10 @@ class Gui:
 
 	def edit(self, values):
 		lines = []
-		f = open('CopiedTextyData.csv', 'r')
-		for x in f:
-			lines.append(x)
-		f.close()
+		file = open('CopiedTextyData.csv', 'r')
+		for line in file:
+			lines.append(line)
+		file.close()
 		selectedValue = values['__listBox__']
 		return selectedValue
 
@@ -106,11 +106,11 @@ class Gui:
 	def loadOrSaveData(self, newWin = None, editWin = None, entry = []):
 			if newWin:
 				print('saving')
-				f = open('CopiedTextyData.csv', 'a+')
+				file = open('CopiedTextyData.csv', 'a+')
 				lenOfFile = len(f.readlines())
-				f.write(entry + '\n')
+				file.write(entry + '\n')
 				newText = f.read()
-				f.close()
+				file.close()
 				entry = entry.split(',')
 				savedTextsDict[entry[0]] = entry[1]
 				self.mainWin['__listBox__'].update(savedTextsDict.values())
@@ -118,21 +118,25 @@ class Gui:
 			
 			if editWin:
 				print('saving')
-				f = open('CopiedTextyData.csv', 'r')
-				data = f.readlines()
-				data[int(entry[0])] = entry
-				f.close()
-				f = open('CopiedTextyData.csv', 'w')
-				for i in data:
-					f.write(i)
-				f.close()
+				file = open('CopiedTextyData.csv', 'r')
+				lines = file.readlines()
+				lines[int(entry[0])] = entry
+				file.close()
+				file = open('CopiedTextyData.csv', 'w')
+				for line in lines:
+					if line[:-2] == '\n':
+						pass
+					else:
+						line += "," + '\n'
+					file.write(line)
+				file.close()
 				entry = entry.split(',')
 				savedTextsDict[entry[0]] = entry[5]
 				self.mainWin['__listBox__'].update(savedTextsDict.values())
 				editWin.close()
 
-			f = open('CopiedTextyData.csv', 'r')
-			lines = f.readlines()
+			file = open('CopiedTextyData.csv', 'r')
+			lines = file.readlines()
 			for line in lines[1:]:
 				if ',' in line:
 					savedTextIndex = line.split(',')[0]
@@ -142,7 +146,7 @@ class Gui:
 					#print(savedTextIndex, savedTextData)
 					savedTextsDict[savedTextIndex] = savedTextName 
 					print(savedTextsDict)
-			f.close()
+			file.close()
 
 	def mainLoop(self):
 		while True:
@@ -159,13 +163,14 @@ class Gui:
 			if mainWin_event == '__Edit__':
 				self.edit(mainWin_values)
 				index = self.mainWin['__listBox__'].get_indexes()[0] + 1
-				f = open('CopiedTextyData.csv', 'r')
+				file = open('CopiedTextyData.csv', 'r')
 
-				data = f.readlines()[index].split(',')
-				texty = data[1]
-				modOne = data[2]
-				modTwo = data[3]
-				hotkey = data[4]
+				linesSplit = file.readlines()[index].split(',')
+				file.close()
+				linesSplit = data[1]
+				linesSplit = data[2]
+				linesSplit = data[3]
+				linesSplit = data[4]
 				print(texty, modOne, modTwo, hotkey)
 				editWindow = self.createNewWindow()
 				editWindow['__multiLine__'].update(value=texty)
@@ -181,21 +186,21 @@ class Gui:
 				savedTextsDict[str(index)] = ""
 				counter = 0
 				newDict = {}
-				for i in range(len(savedTextsDict)):
-					if savedTextsDict[str(i)] == "":
+				for num in range(len(savedTextsDict)):
+					if savedTextsDict[str(num)] == "":
 						continue
 					else:
-						newDict[counter] = savedTextsDict[str(i)]
+						newDict[counter] = savedTextsDict[str(num)]
 						counter+=1
 				self.mainWin['__listBox__'].update(newDict.values())
-				f = open('CopiedTextyData.csv', 'r')
-				lines = f.readlines()
-				f.close()
-				f = open('CopiedTextyData.csv', 'w')
+				file = open('CopiedTextyData.csv', 'r')
+				lines = file.readlines()
+				file.close()
+				file = open('CopiedTextyData.csv', 'w')
 				counter = 0
-				for i in lines:
-					print(i[0], index)
-					if i[0] == str(index):
+				for line in lines:
+					print(line[0], index)
+					if line[0] == str(index):
 						print('EQUAL TO INDEX')
 						print('MY DICT')
 						print(savedTextsDict["2"])
@@ -203,16 +208,16 @@ class Gui:
 						print(savedTextsDict)
 						continue
 					else:
-						iSplit = i.split(',')
-						f.write(str(counter) + i[1:])
+						lineSplit = line.split(',')
+						file.write(str(counter) + line[1:])
 					counter += 1
-				f.close()
+				file.close()
 			if mainWin_event == '__theme__':
 				newTheme = mainWin_values['__theme__'][0]
 				sg.theme(newTheme)
-				f = open('SelectedTheme.csv', 'w')
-				f.write(newTheme)
-				f.close()
+				file = open('SelectedTheme.csv', 'w')
+				file.write(newTheme)
+				file.close()
 				self.mainWin.close()
 				main()
 
