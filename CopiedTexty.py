@@ -189,15 +189,15 @@ class Gui:
 				for i in lines:
 					print(i[0], index)
 					if i[0] == str(index):
-						continue
 						print('EQUAL TO INDEX')
+						print('MY DICT')
+						print(savedTextsDict["2"])
+						del savedTextsDict[str(index)]
+						print(savedTextsDict)
+						continue
 					else:
 						iSplit = i.split(',')
 						f.write(str(counter) + i[1:])
-						savedTextsDict.popitem()
-						print('------------------')
-						print(len(savedTextsDict))
-						print('------------------')
 					counter += 1
 				f.close()
 			if mainWin_event == '__theme__':
