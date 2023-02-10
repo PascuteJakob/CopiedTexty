@@ -171,7 +171,7 @@ class Gui:
 				modOne = linesSplit[2]
 				modTwo = linesSplit[3]
 				hotkey = linesSplit[4]
-				name = linesSplit[5]
+				#name = linesSplit[5]
 				print(texty, modOne, modTwo, hotkey)
 				editWindow = self.createNewWindow()
 				editWindow['__multiLine__'].update(value=texty)
@@ -180,8 +180,11 @@ class Gui:
 				editWindow['__hotKey__'].update(value=hotkey)
 				editWindow_event, editWindow_values = editWindow.read()
 				if editWindow_event == '__Save__':
-					self.loadOrSaveData(None, editWindow, str(index) + "," + editWindow_values['__multiLine__'] + "," 
-						+ editWindow_values['__mod1__'] + "," + editWindow_values['__mod2__'] + "," + editWindow_values['__hotKey__'] + "," + editWindow_values['__nameInput__'])
+					editedEntry = str(index) + "," + editWindow_values['__multiLine__'] + "," 
+					+ editWindow_values['__mod1__'] + "," + editWindow_values['__mod2__']
+					+ "," + editWindow_values['__hotKey__'] + ","
+					+ editWindow_values['__nameInput__'] + '\n'
+					self.loadOrSaveData(None, editWindow, editedEntry)
 			if mainWin_event == '__Delete__':
 				index = self.mainWin['__listBox__'].get_indexes()[0] + 1
 				savedTextsDict[str(index)] = ""
