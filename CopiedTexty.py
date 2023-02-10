@@ -29,43 +29,7 @@ class Gui:
 		self.mainWin()
 		self.newWin()
 		self.mainWin = sg.Window('Copied Texty', self.mainWin_layout,)
-	def loadOrSaveData(self, newWin = None, editWin = None, entry = []):
-		if newWin:
-			print('saving')
-			f = open('CopiedTextyData.csv', 'a+')
-			lenOfFile = len(f.readlines())
-			f.write(entry + '\n')
-			newText = f.read()
-			f.close()
-			entry = entry.split(',')
-			savedTextsDict[entry[0]] = entry[1]
-			self.mainWin['__listBox__'].update(savedTextsDict.values())
-			newWin.close()
-		
-		if editWin:
-			print('saving')
-			f = open('CopiedTextyData.csv', 'r')
-			data = f.readlines()
-			data[int(entry[0])] = entry
-			f.close()
-			f = open('CopiedTextyData.csv', 'w')
-			for i in data:
-				f.write(i)
-			f.close()
-			entry = entry.split(',')
-			savedTextsDict[entry[0]] = entry[1]
-			self.mainWin['__listBox__'].update(savedTextsDict.values())
-			editWin.close()
 
-		f = open('CopiedTextyData.csv', 'r')
-		for lines in f:
-			if ',' in lines:
-				savedTextIndex = lines.split(',')[0]
-				savedTextData = lines.split(',')[1]
-				dataForDict = savedTextData[0]
-				#print(savedTextIndex, savedTextData)
-				savedTextsDict[savedTextIndex] = savedTextData 
-				print(savedTextsDict)
 	def mainWin(self):
 		tab1_layout = [[
 			sg.Text('Texty'),
@@ -105,6 +69,8 @@ class Gui:
 
 	def newWin(self, values = []):
 		newWin_layout = [[
+			sg.Input(default_text = 'My new Texty', s=(37,0), key=('__nameInput__')),
+		],[
 			sg.Multiline('Input your new Texty here', s=(37,10), key=('__multiLine__')),
 		],[
 			sg.Text('Hotkey Combo'),
@@ -137,6 +103,47 @@ class Gui:
 # THIS SHOULD BE THE END OF GUI CODE
 #WARNING WARNING WARNING WARNING WARNING
 ########################################
+	def loadOrSaveData(self, newWin = None, editWin = None, entry = []):
+			if newWin:
+				print('saving')
+				f = open('CopiedTextyData.csv', 'a+')
+				lenOfFile = len(f.readlines())
+				f.write(entry + '\n')
+				newText = f.read()
+				f.close()
+				entry = entry.split(',')
+				savedTextsDict[entry[0]] = entry[1]
+				self.mainWin['__listBox__'].update(savedTextsDict.values())
+				newWin.close()
+			
+			if editWin:
+				print('saving')
+				f = open('CopiedTextyData.csv', 'r')
+				data = f.readlines()
+				data[int(entry[0])] = entry
+				f.close()
+				f = open('CopiedTextyData.csv', 'w')
+				for i in data:
+					f.write(i)
+				f.close()
+				entry = entry.split(',')
+				savedTextsDict[entry[0]] = entry[5]
+				self.mainWin['__listBox__'].update(savedTextsDict.values())
+				editWin.close()
+
+			f = open('CopiedTextyData.csv', 'r')
+			lines = f.readlines()
+			for line in lines[1:]:
+				if ',' in line:
+					savedTextIndex = line.split(',')[0]
+					savedTextData = line.split(',')[1]
+					savedTextName = line.split(',')[5]
+					dataForDict = savedTextData[0]
+					#print(savedTextIndex, savedTextData)
+					savedTextsDict[savedTextIndex] = savedTextName 
+					print(savedTextsDict)
+			f.close()
+
 	def mainLoop(self):
 		while True:
 			mainWin_event, mainWin_values = self.mainWin.read() 
@@ -147,11 +154,11 @@ class Gui:
 				newWin_event, newWin_values = newWin.read() 
 				if newWin_event == '__Save__':
 					print(str(len(savedTextsDict)))
-					self.loadOrSaveData(newWin, None, str(len(savedTextsDict)) + "," + newWin_values['__multiLine__'] + "," 
-						+ newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'])
+					self.loadOrSaveData(newWin, None, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," 
+						+ newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "," + newWin_values['__nameInput__'])
 			if mainWin_event == '__Edit__':
 				self.edit(mainWin_values)
-				index = self.mainWin['__listBox__'].get_indexes()[0]
+				index = self.mainWin['__listBox__'].get_indexes()[0] + 1
 				f = open('CopiedTextyData.csv', 'r')
 
 				data = f.readlines()[index].split(',')
@@ -168,9 +175,9 @@ class Gui:
 				editWindow_event, editWindow_values = editWindow.read()
 				if editWindow_event == '__Save__':
 					self.loadOrSaveData(None, editWindow, str(index) + "," + editWindow_values['__multiLine__'] + "," 
-						+ editWindow_values['__mod1__'] + "," + editWindow_values['__mod2__'] + "," + editWindow_values['__hotKey__'])
+						+ editWindow_values['__mod1__'] + "," + editWindow_values['__mod2__'] + "," + editWindow_values['__hotKey__'] + "," + editWindow_values['__nameInput__'])
 			if mainWin_event == '__Delete__':
-				index = self.mainWin['__listBox__'].get_indexes()[0]
+				index = self.mainWin['__listBox__'].get_indexes()[0] + 1
 				savedTextsDict[str(index)] = ""
 				counter = 0
 				newDict = {}
