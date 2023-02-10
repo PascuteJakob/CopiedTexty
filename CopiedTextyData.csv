@@ -1,5 +1,6 @@
-id,Text,hotkeyModifier,hotkeyModifier2,hotkey,name
-1,Input your new Texty here,ctrl,alt,4,nameOne
-2,Input your new Texty here,,,,nameTwo
-3,this is a test,,,,test texty
-4,THIS IS A TEST,ctrl,shift,2,newTEST
+0,Input your new Texty here,ctrl,alt,4,test
+1,Input your new Texty here,,,,test2
+2,Input your new Texty here,,,,test
+3,Input your new Texty here,,,,test test
+4,THIS SHOULD NOT SHOW,,,,test test test
+4,Input your new Texty here,,,,test test

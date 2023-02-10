@@ -107,9 +107,9 @@ class Gui:
 			if newWin:
 				print('saving')
 				file = open('CopiedTextyData.csv', 'a+')
-				lenOfFile = len(f.readlines())
+				lenOfFile = len(file.readlines())
 				file.write(entry + '\n')
-				newText = f.read()
+				newText = file.read()
 				file.close()
 				entry = entry.split(',')
 				savedTextsDict[entry[0]] = entry[1]
@@ -124,10 +124,10 @@ class Gui:
 				file.close()
 				file = open('CopiedTextyData.csv', 'w')
 				for line in lines:
-					if line[:-2] == '\n':
+					if '\n' in line:
 						pass
 					else:
-						line += "," + '\n'
+						line += '\n'
 					file.write(line)
 				file.close()
 				entry = entry.split(',')
@@ -137,7 +137,7 @@ class Gui:
 
 			file = open('CopiedTextyData.csv', 'r')
 			lines = file.readlines()
-			for line in lines[1:]:
+			for line in lines:
 				if ',' in line:
 					savedTextIndex = line.split(',')[0]
 					savedTextData = line.split(',')[1]
@@ -145,7 +145,6 @@ class Gui:
 					dataForDict = savedTextData[0]
 					#print(savedTextIndex, savedTextData)
 					savedTextsDict[savedTextIndex] = savedTextName 
-					print(savedTextsDict)
 			file.close()
 
 	def mainLoop(self):
@@ -157,12 +156,11 @@ class Gui:
 				newWin = self.createNewWindow()
 				newWin_event, newWin_values = newWin.read() 
 				if newWin_event == '__Save__':
-					print(str(len(savedTextsDict)))
 					self.loadOrSaveData(newWin, None, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," 
 						+ newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "," + newWin_values['__nameInput__'])
 			if mainWin_event == '__Edit__':
 				self.edit(mainWin_values)
-				index = self.mainWin['__listBox__'].get_indexes()[0] + 1
+				index = self.mainWin['__listBox__'].get_indexes()[0]
 				file = open('CopiedTextyData.csv', 'r')
 
 				linesSplit = file.readlines()[index].split(',')
@@ -171,50 +169,56 @@ class Gui:
 				modOne = linesSplit[2]
 				modTwo = linesSplit[3]
 				hotkey = linesSplit[4]
-				#name = linesSplit[5]
-				print(texty, modOne, modTwo, hotkey)
+				name = linesSplit[5]
+				#print(texty, modOne, modTwo, hotkey)
 				editWindow = self.createNewWindow()
 				editWindow['__multiLine__'].update(value=texty)
 				editWindow['__mod1__'].update(value=modOne)
 				editWindow['__mod2__'].update(value=modTwo)
 				editWindow['__hotKey__'].update(value=hotkey)
+				editWindow['__nameInput__'].update(value=name)
 				editWindow_event, editWindow_values = editWindow.read()
 				if editWindow_event == '__Save__':
-					editedEntry = str(index) + "," + editWindow_values['__multiLine__'] + "," 
+					editedEntry = str(str(index) + "," + editWindow_values['__multiLine__'] + "," 
 					+ editWindow_values['__mod1__'] + "," + editWindow_values['__mod2__']
 					+ "," + editWindow_values['__hotKey__'] + ","
-					+ editWindow_values['__nameInput__'] + '\n'
+					+ editWindow_values['__nameInput__'])
 					self.loadOrSaveData(None, editWindow, editedEntry)
 			if mainWin_event == '__Delete__':
-				index = self.mainWin['__listBox__'].get_indexes()[0] + 1
+				index = self.mainWin['__listBox__'].get_indexes()[0]
 				savedTextsDict[str(index)] = ""
 				counter = 0
 				newDict = {}
-				for num in range(len(savedTextsDict)):
-					if savedTextsDict[str(num)] == "":
+				for value in savedTextsDict.values():
+					if value == "":
 						continue
+					elif value == "id":
+						pass
 					else:
-						newDict[counter] = savedTextsDict[str(num)]
-						counter+=1
+						newDict[counter] = value
+					counter+=1
+				del savedTextsDict[str(counter)]
 				self.mainWin['__listBox__'].update(newDict.values())
 				file = open('CopiedTextyData.csv', 'r')
 				lines = file.readlines()
 				file.close()
 				file = open('CopiedTextyData.csv', 'w')
 				counter = 0
+				#file.write(lines[0])
 				for line in lines:
-					print(line[0], index)
-					if line[0] == str(index):
+					lineSplit = line.split(',')
+					if lineSplit[0] == str(index):
 						print('EQUAL TO INDEX')
 						print('MY DICT')
-						print(savedTextsDict["2"])
+						print(line)
+						#print(savedTextsDict["2"])
 						del savedTextsDict[str(index)]
-						print(savedTextsDict)
+						#print(savedTextsDict)
 						continue
 					else:
-						lineSplit = line.split(',')
-						file.write(str(counter) + line[1:])
-					counter += 1
+						del lineSplit[0] 
+						file.write(str(counter) + ',' + ','.join(lineSplit))
+						counter += 1
 				file.close()
 			if mainWin_event == '__theme__':
 				newTheme = mainWin_values['__theme__'][0]
