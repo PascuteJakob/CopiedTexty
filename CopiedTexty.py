@@ -106,13 +106,25 @@ class Gui:
 	def loadOrSaveData(self, newWin = None, editWin = None, entry = []):
 			if newWin:
 				print('saving')
-				file = open('CopiedTextyData.csv', 'a+')
-				lenOfFile = len(file.readlines())
-				file.write(entry + '\n')
-				newText = file.read()
+				file = open('CopiedTextyData.csv', 'r')
+				lines = file.readlines()
+				print(lines)
+				lenOfLines = len(lines)
 				file.close()
-				entry = entry.split(',')
-				savedTextsDict[entry[0]] = entry[1]
+				file = open('CopiedTextyData.csv', 'a')
+				data = entry.split(',')
+				newEntry = []
+				for item in data:
+					if item == data[0]:
+						continue
+					else:
+						newEntry.append("," + item)
+				newEntry = "".join(newEntry)
+				file.write(str(lenOfLines) + newEntry + '\n')
+				#newText = file.read()
+				file.close()
+				newEntry = newEntry.split(',')
+				savedTextsDict[newEntry[0]] = newEntry[5]
 				self.mainWin['__listBox__'].update(savedTextsDict.values())
 				newWin.close()
 			
@@ -156,7 +168,7 @@ class Gui:
 				newWin = self.createNewWindow()
 				newWin_event, newWin_values = newWin.read() 
 				if newWin_event == '__Save__':
-					self.loadOrSaveData(newWin, None, str(len(savedTextsDict)+1) + "," + newWin_values['__multiLine__'] + "," 
+					self.loadOrSaveData(newWin, None, str(len(savedTextsDict)) + "," + newWin_values['__multiLine__'] + "," 
 						+ newWin_values['__mod1__'] + "," + newWin_values['__mod2__'] + "," + newWin_values['__hotKey__'] + "," + newWin_values['__nameInput__'])
 			if mainWin_event == '__Edit__':
 				self.edit(mainWin_values)
