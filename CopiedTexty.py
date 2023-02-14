@@ -216,7 +216,8 @@ class Gui:
 					else:
 						newDict[counter] = value
 					counter+=1
-				del savedTextsDict[str(counter)]
+				print(newDict)
+				#del savedTextsDict[str(counter)]
 				self.mainWin['__listBox__'].update(newDict.values())
 				file = open('CopiedTextyData.csv', 'r')
 				lines = file.readlines()
@@ -227,11 +228,8 @@ class Gui:
 				for line in lines:
 					lineSplit = line.split(',')
 					if lineSplit[0] == str(index):
-						print('EQUAL TO INDEX')
-						print('MY DICT')
-						print(line)
 						#print(savedTextsDict["2"])
-						del savedTextsDict[str(index)]
+						#del savedTextsDict[str(index)]
 						#print(savedTextsDict)
 						continue
 					else:
