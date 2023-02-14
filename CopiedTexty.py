@@ -123,9 +123,16 @@ class Gui:
 				file.write(str(lenOfLines) + newEntry + '\n')
 				#newText = file.read()
 				file.close()
-				newEntry = newEntry.split(',')
-				savedTextsDict[newEntry[0]] = newEntry[5]
-				self.mainWin['__listBox__'].update(savedTextsDict.values())
+				file = open('CopiedTextyData.csv', 'r')
+				lines = file.readlines()
+				newDict = {}
+				for line in lines:
+					line = line.split(',')
+					newDict[line[0]] = line[5].replace('\n', '')
+				print('-------------------')
+				print(newDict)
+				print('-------------------')
+				self.mainWin['__listBox__'].update(newDict.values())
 				newWin.close()
 			
 			if editWin:
