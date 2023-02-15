@@ -135,13 +135,20 @@ class Gui:
 				file = open('CopiedTextyData.csv', 'r')
 				lines = file.readlines()
 				newDict = {}
+				newHotkeyDict = {}
 				for line in lines:
 					line = line.split(',')
 					newDict[line[0]] = line[5].replace('\n', '')
+					savedModOne = line[2]
+					savedModTwo = line[3]
+					savedHotkey = line[4]
+					hotkeyData = [savedModOne, savedModTwo, savedHotkey]
+					newHotkeyDict[line[0]] = hotkeyData
 				print('-------------------')
 				print(newDict)
 				print('-------------------')
 				self.mainWin['__listBox__'].update(newDict.values())
+				self.mainWin['__hotkeyListbox__'].update(newHotkeyDict.values())
 				newWin.close()
 			
 			if editWin:
@@ -158,9 +165,16 @@ class Gui:
 						line += '\n'
 					file.write(line)
 				file.close()
+				newHotkeyDict = {}
 				entry = entry.split(',')
 				savedTextsDict[entry[0]] = entry[5]
+				savedModOne = entry[2]
+				savedModTwo = entry[3]
+				savedHotkey = entry[4]
+				hotkeyData = [savedModOne, savedModTwo, savedHotkey]
+				savedHotkeysDict[entry[0]] = hotkeyData
 				self.mainWin['__listBox__'].update(savedTextsDict.values())
+				self.mainWin['__hotkeyListbox__'].update(savedHotkeysDict.values())
 				editWin.close()
 
 			file = open('CopiedTextyData.csv', 'r')
