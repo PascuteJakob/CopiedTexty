@@ -1,3 +1,4 @@
-0,Input your new Texty here,,,,First
-1,test1,,,,test1
-2,test2,,,,test2
+0,Input your new Texty here,ctrl,shift,1,First
+1,test1,ctrl,shift,2,test1
+2,test2,ctrl,shift,3,test2
+3,Input your new Texty here,ctrl,shift,4,test3
