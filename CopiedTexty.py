@@ -254,6 +254,7 @@ def hotkeyListener(myDict):
 		entry = myDict[entry]
 		#keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboard.write("entry[0]"))
 		keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboardWrite, args=[entry[0]])
+	print('done')
 	#keyboard.add_hotkey("")
 def keyboardWrite(text):
 	keyboard.write(text,0,False)
@@ -266,8 +267,8 @@ def main():
 	for line in lines:
 		lineSplit = line.split(',')
 		dictForThread[lineSplit[0]] = lineSplit[1], lineSplit[2], lineSplit[3], lineSplit[4]
-	#print(dictForThread["0"])
-	hotkeyListener(dictForThread)
+	thread = Thread(target=hotkeyListener, args=(dictForThread))
+	thread.start()
 	while True:
 		continue
 	#myWin = Gui()
@@ -277,6 +278,5 @@ def exit_handler():
 if __name__ == "__main__":
 	atexit.register(exit_handler)
 	main()
-
 
 
