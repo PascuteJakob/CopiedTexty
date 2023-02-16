@@ -248,6 +248,10 @@ class Gui:
 				self.mainWin.close()
 				main()
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 def main():
 	myWin = Gui()
