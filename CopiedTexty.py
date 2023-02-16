@@ -3,6 +3,8 @@ import keyboard
 import mouse
 import fileinput
 import threading
+import time
+import atexit
 
 defaultTheme = 'DarkAmber'
 file = open('SelectedTheme.csv', 'r')
@@ -246,32 +248,35 @@ class Gui:
 				self.mainWin.close()
 				main()
 
-class hotKeyThread(threading.Thread):
-	def __init__(self):
-		#seperate csv and make vars here
-		self.thread = threading.Thread
-		file = open("CopiedTextyData.csv", "r")
-		lines = file.readlines()
-		file.close()
-		self.Dict = {}
-	def startHotkeys(self):
-		#print('DELETING THREAD')
-		self.__del__()
-	def run(self):
-		self.thread = threading.Thread(target=self.startHotkeys, args=())
-		self.thread.start()
-	def __del__(self):
-		return
+def hotkeyListener(myDict):
+	#print(myDict)
+	for entry in myDict:
+		entry = myDict[entry]
+		#keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboard.write("entry[0]"))
+		keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboardWrite, args=[entry[0]])
+	#keyboard.add_hotkey("")
+def keyboardWrite(text):
+	keyboard.write(text)
 
 def main():
+	dictForThread = {}
+	file = open("CopiedTextyData.csv", "r")
+	lines = file.readlines()
+	file.close()
+	for line in lines:
+		lineSplit = line.split(',')
+		dictForThread[lineSplit[0]] = lineSplit[1], lineSplit[2], lineSplit[3], lineSplit[4]
+	#print(dictForThread["0"])
+	hotkeyListener(dictForThread)
+	while True:
+		continue
 	#myWin = Gui()
 	#myWin.mainLoop()
-	threadDict = {}
-	for i in range(10):
-		test = hotKeyThread()
-		test.run()
-	for thread in threading.enumerate():
-		print(thread.name)
+def exit_handler():
+    keyboard.unhook_all_hotkeys()
 if __name__ == "__main__":
+	atexit.register(exit_handler)
 	main()
+
+
 
