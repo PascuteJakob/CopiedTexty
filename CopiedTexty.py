@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import keyboard
 import mouse
 import fileinput
+from threading import Thread
 
 defaultTheme = 'DarkAmber'
 file = open('SelectedTheme.csv', 'r')
@@ -29,7 +30,6 @@ class Gui:
 		self.mainWin()
 		self.newWin()
 		self.mainWin = sg.Window('Copied Texty', self.mainWin_layout,)
-
 	def mainWin(self):
 		tab1_layout = [[
 			sg.Text('Texty'),
@@ -246,12 +246,31 @@ class Gui:
 				self.mainWin.close()
 				main()
 
-
+class hotKeyThread(Thread):
+	def __init__(self):
+		#seperate csv and make vars here
+		self.thread = Thread
+		file = open("CopiedTextyData.csv", "r")
+		lines = file.readlines()
+		self.Dict = {}
+		for line in lines:
+			print(line)
+	def startHotkeys(self):
+		self.__del__()
+	def run(self):
+		self.thread = Thread(target=self.startHotkeys, args=())
+		self.thread.start()
+		self.__del__()
+	def __del__(self):
+		return
 
 def main():
-	myWin = Gui()
-	myWin.mainLoop()
-
+	#myWin = Gui()
+	#myWin.mainLoop()
+	threadDict = {}
+	for i in range(1000000):
+		test = hotKeyThread()
+		test.run()
 if __name__ == "__main__":
 	main()
 
