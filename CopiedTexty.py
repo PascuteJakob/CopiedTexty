@@ -18,6 +18,7 @@ else:
 theme_name_list = sg.theme_list()
 savedTextsList = []
 savedTextsDict = {}
+savedHotkeysDict = {}
 
 modifiers = ['ctrl', 'shift', 'alt']
 keys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -39,10 +40,18 @@ class Gui:
 		],[
 			sg.Listbox(list(savedTextsDict.values()),
 			default_values = None,
-			size=(24,10),
+			size=(17,10),
 			key='__listBox__',
-			enable_events = True,),
-			
+			enable_events = True,
+			no_scrollbar = True,
+			p=((5,0),(0,0)),),			
+			sg.Listbox(list(savedHotkeysDict.values()),
+			default_values = None,
+			size=(9,10),
+			key='__hotkeyListbox__',
+			enable_events = True,
+			no_scrollbar = True,
+			p=((0,0),(0,0)),),
 		],[
 			sg.Button('New', s=(6,1),p=((5,4),(0,0)), key='__New__'),
 			sg.Button('Edit', s=(6,1), key='__Edit__'),
@@ -128,13 +137,20 @@ class Gui:
 				file = open('CopiedTextyData.csv', 'r')
 				lines = file.readlines()
 				newDict = {}
+				newHotkeyDict = {}
 				for line in lines:
 					line = line.split(',')
 					newDict[line[0]] = line[5].replace('\n', '')
+					savedModOne = line[2]
+					savedModTwo = line[3]
+					savedHotkey = line[4]
+					hotkeyData = [savedModOne, savedModTwo, savedHotkey]
+					newHotkeyDict[line[0]] = hotkeyData
 				print('-------------------')
 				print(newDict)
 				print('-------------------')
 				self.mainWin['__listBox__'].update(newDict.values())
+				self.mainWin['__hotkeyListbox__'].update(newHotkeyDict.values())
 				newWin.close()
 			
 			if editWin:
@@ -151,9 +167,16 @@ class Gui:
 						line += '\n'
 					file.write(line)
 				file.close()
+				newHotkeyDict = {}
 				entry = entry.split(',')
 				savedTextsDict[entry[0]] = entry[5]
+				savedModOne = entry[2]
+				savedModTwo = entry[3]
+				savedHotkey = entry[4]
+				hotkeyData = [savedModOne, savedModTwo, savedHotkey]
+				savedHotkeysDict[entry[0]] = hotkeyData
 				self.mainWin['__listBox__'].update(savedTextsDict.values())
+				self.mainWin['__hotkeyListbox__'].update(savedHotkeysDict.values())
 				editWin.close()
 
 			file = open('CopiedTextyData.csv', 'r')
@@ -163,9 +186,14 @@ class Gui:
 					savedTextIndex = line.split(',')[0]
 					savedTextData = line.split(',')[1]
 					savedTextName = line.split(',')[5]
+					savedModOne = line.split(',')[2]
+					savedModTwo = line.split(',')[3]
+					savedHotkey = line.split(',')[4]
+					hotkeyData = [savedModOne, savedModTwo, savedHotkey]
 					dataForDict = savedTextData[0]
 					#print(savedTextIndex, savedTextData)
-					savedTextsDict[savedTextIndex] = savedTextName 
+					savedTextsDict[savedTextIndex] = savedTextName
+					savedHotkeysDict[savedTextIndex] = hotkeyData
 			file.close()
 
 	def mainLoop(self):
@@ -239,6 +267,10 @@ class Gui:
 						file.write(str(counter) + ',' + ','.join(lineSplit))
 						counter += 1
 				file.close()
+			if mainWin_event == '__listBox__':
+				print('working')
+				index = self.mainWin['__listBox__'].get_indexes()[0]
+				self.mainWin['__hotkeyListbox__'].update(set_to_index=[index],scroll_to_index=index)
 			if mainWin_event == '__theme__':
 				newTheme = mainWin_values['__theme__'][0]
 				sg.theme(newTheme)
