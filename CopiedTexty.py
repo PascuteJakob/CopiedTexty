@@ -256,7 +256,7 @@ def hotkeyListener(myDict):
 		keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboardWrite, args=[entry[0]])
 	#keyboard.add_hotkey("")
 def keyboardWrite(text):
-	keyboard.write(text)
+	keyboard.write(text,0,False)
 
 def main():
 	dictForThread = {}
