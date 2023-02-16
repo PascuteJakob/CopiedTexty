@@ -248,31 +248,10 @@ class Gui:
 				self.mainWin.close()
 				main()
 
-def hotkeyListener(myDict):
-	#print(myDict)
-	for entry in myDict:
-		entry = myDict[entry]
-		#keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboard.write("entry[0]"))
-		keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboardWrite, args=[entry[0]])
-	print('done')
-	#keyboard.add_hotkey("")
-def keyboardWrite(text):
-	keyboard.write(text,0,False)
 
 def main():
-	dictForThread = {}
-	file = open("CopiedTextyData.csv", "r")
-	lines = file.readlines()
-	file.close()
-	for line in lines:
-		lineSplit = line.split(',')
-		dictForThread[lineSplit[0]] = lineSplit[1], lineSplit[2], lineSplit[3], lineSplit[4]
-	thread = Thread(target=hotkeyListener, args=(dictForThread))
-	thread.start()
-	while True:
-		continue
-	#myWin = Gui()
-	#myWin.mainLoop()
+	myWin = Gui()
+	myWin.mainLoop()
 def exit_handler():
     keyboard.unhook_all_hotkeys()
 if __name__ == "__main__":
