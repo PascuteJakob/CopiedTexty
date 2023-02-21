@@ -300,23 +300,17 @@ def hotkeyListener(myDict):
 	for entry in myDict:
 		entry = myDict[entry]
 		#keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboard.write("entry[0]"))
-		keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboardWrite, args=[entry[0]], trigger_on_release=True, suppress=True)
+		keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboardWrite, args=[entry[0]], timeout=1,suppress=True)
 	#keyboard.add_hotkey("")
 def keyboardWrite(text):
-	print(autoit.commands())
 	oldClip = autoit.clip_get()
-	newClipText = text.replace("<newline>", "\n").replace("<comma>", ",")
+	newClipText = text.replace("<newline>", "\n")
+	newClipText = newClipText.replace("<comma>", ",")
 	#time.sleep(1)
 	autoit.clip_put(newClipText)
 	autoit.send("^v")
 	autoit.clip_put(oldClip)
-	time.sleep(Time:
-Name:
-Company:
-Issue/Solution:
-Callback:
-Ticket:
--------------------------------------)
+	#time.sleep(5)
 
 def main():
 	dictForThread = {}
