@@ -1,3 +1,2 @@
-0,Input your new Texty here,ctrl,alt,1,First
-1,test1,ctrl,shift,2,test1 
-2,test2,ctrl,shift,3,test2
+0,Time:<newline>Name:<newline>Company:<newline>Issue/Solution:<newline>Callback:<newline>Ticket:<newline>-------------------------------------,ctrl,alt,1,First
+1,Thanks<comma><newline>Jakob Pascute<newline>Experience Office Solutions<newline>9815 Dawsons Creek Blvd<newline>Fort Wayne<comma> IN 46825<newline>260-490-7740,ctrl,shift,2,test1

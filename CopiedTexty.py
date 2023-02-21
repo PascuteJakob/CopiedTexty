@@ -5,6 +5,7 @@ import fileinput
 import threading
 import time
 import atexit
+import autoit
 
 defaultTheme = 'DarkAmber'
 file = open('SelectedTheme.csv', 'r')
@@ -85,9 +86,9 @@ class Gui:
 			sg.Multiline('Input your new Texty here', s=(37,10), key=('__multiLine__')),
 		],[
 			sg.Text('Hotkey Combo'),
-			sg.Combo(modifiers, s=(5,0), key=('__mod1__')),
-			sg.Combo(modifiers, s=(5,0), key=('__mod2__')),
-			sg.Combo(keys, s=(5,0), key=('__hotKey__')),
+			sg.Combo(modifiers, s=(5,0), key=('__mod1__'), default_value ="ctrl",),
+			sg.Combo(modifiers, s=(5,0), key=('__mod2__'), default_value = "shift",),
+			sg.Combo(keys, s=(5,0), key=('__hotKey__'), default_value="0",),
 		],[
 			sg.Button(button_text = "Save", key='__Save__')
 		]]
@@ -129,6 +130,7 @@ class Gui:
 					if item == data[0]:
 						continue
 					else:
+						item = item.replace("\n", '<return>')
 						newEntry.append("," + item)
 				newEntry = "".join(newEntry)
 				file.write(str(lenOfLines) + newEntry + '\n')
@@ -181,6 +183,7 @@ class Gui:
 
 			file = open('CopiedTextyData.csv', 'r')
 			lines = file.readlines()
+			hotkeyListenerData = {}
 			for line in lines:
 				if ',' in line:
 					savedTextIndex = line.split(',')[0]
@@ -190,11 +193,14 @@ class Gui:
 					savedModTwo = line.split(',')[3]
 					savedHotkey = line.split(',')[4]
 					hotkeyData = [savedModOne, savedModTwo, savedHotkey]
+					hotkeyListenerData[savedTextIndex] = [savedTextData, savedModOne, savedModTwo, savedHotkey]
 					dataForDict = savedTextData[0]
 					#print(savedTextIndex, savedTextData)
 					savedTextsDict[savedTextIndex] = savedTextName
 					savedHotkeysDict[savedTextIndex] = hotkeyData
 			file.close()
+			keyboard.unhook_all_hotkeys()
+			hotkeyListener(hotkeyListenerData)
 
 	def mainLoop(self):
 		while True:
@@ -228,7 +234,7 @@ class Gui:
 				editWindow['__nameInput__'].update(value=name)
 				editWindow_event, editWindow_values = editWindow.read()
 				if editWindow_event == '__Save__':
-					editedEntry = str(str(index) + "," + editWindow_values['__multiLine__'] + "," 
+					editedEntry = str(str(index) + "," + editWindow_values['__multiLine__'].replace('\n', '<newline>').replace(',', '<comma>') + "," 
 					+ editWindow_values['__mod1__'] + "," + editWindow_values['__mod2__']
 					+ "," + editWindow_values['__hotKey__'] + ","
 					+ editWindow_values['__nameInput__'])
@@ -255,6 +261,8 @@ class Gui:
 				file = open('CopiedTextyData.csv', 'w')
 				counter = 0
 				#file.write(lines[0])
+				hotkeyListenerData = {}
+				hotkeyListboxData = {}
 				for line in lines:
 					lineSplit = line.split(',')
 					if lineSplit[0] == str(index):
@@ -263,10 +271,17 @@ class Gui:
 						#print(savedTextsDict)
 						continue
 					else:
+						hotkeyListboxData[lineSplit[0]] = [lineSplit[2], lineSplit[3], lineSplit[4]]
+						hotkeyListenerData[lineSplit[0]] = [lineSplit[1], lineSplit[2], lineSplit[3], lineSplit[4]]
 						del lineSplit[0] 
 						file.write(str(counter) + ',' + ','.join(lineSplit))
 						counter += 1
 				file.close()
+				#print(newDict)
+				self.mainWin['__hotkeyListbox__'].update(hotkeyListboxData.values())
+				keyboard.unhook_all_hotkeys()
+				#print(hotkeyListener)
+				hotkeyListener(hotkeyListenerData)
 			if mainWin_event == '__listBox__':
 				print('working')
 				index = self.mainWin['__listBox__'].get_indexes()[0]
@@ -279,9 +294,40 @@ class Gui:
 				file.close()
 				self.mainWin.close()
 				main()
-
+def hotkeyListener(myDict):
+	#print(myDict)
+	#print(myDict)
+	for entry in myDict:
+		entry = myDict[entry]
+		#keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboard.write("entry[0]"))
+		keyboard.add_hotkey(entry[1] + "+" + entry[2] + "+" + entry[3], keyboardWrite, args=[entry[0]], trigger_on_release=True, suppress=True)
+	#keyboard.add_hotkey("")
+def keyboardWrite(text):
+	print(autoit.commands())
+	oldClip = autoit.clip_get()
+	newClipText = text.replace("<newline>", "\n").replace("<comma>", ",")
+	#time.sleep(1)
+	autoit.clip_put(newClipText)
+	autoit.send("^v")
+	autoit.clip_put(oldClip)
+	time.sleep(Time:
+Name:
+Company:
+Issue/Solution:
+Callback:
+Ticket:
+-------------------------------------)
 
 def main():
+	dictForThread = {}
+	file = open("CopiedTextyData.csv", "r")
+	lines = file.readlines()
+	file.close()
+	for line in lines:
+		lineSplit = line.split(',')
+		dictForThread[lineSplit[0]] = lineSplit[1], lineSplit[2], lineSplit[3], lineSplit[4]
+	#print(dictForThread["0"])
+	hotkeyListener(dictForThread)
 	myWin = Gui()
 	myWin.mainLoop()
 def exit_handler():
